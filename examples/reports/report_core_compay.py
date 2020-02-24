@@ -6,6 +6,7 @@ import eastmoneypy
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from examples.factors.fundamental_selector import FundamentalSelector
+from examples.reports import subscriber_emails
 from zvdata.api import get_entities
 from zvdata.utils.time_utils import now_pd_timestamp, to_time_str
 from zvt import init_log
@@ -26,7 +27,7 @@ def report_core_company():
         email_action = EmailInformer()
 
         try:
-            # StockTradeDay.record_data(provider='joinquant')
+            StockTradeDay.record_data(provider='joinquant')
             # Stock.record_data(provider='joinquant')
             # FinanceFactor.record_data(provider='eastmoney')
             # BalanceSheet.record_data(provider='eastmoney')
@@ -48,6 +49,11 @@ def report_core_company():
 
                 # add them to eastmoney
                 try:
+                    try:
+                        eastmoneypy.del_group('core')
+                    except:
+                        pass
+                    eastmoneypy.create_group('core')
                     for stock in stocks:
                         eastmoneypy.add_to_group(stock.code, group_name='core')
                 except Exception as e:
@@ -61,10 +67,7 @@ def report_core_company():
 
             logger.info(msg)
 
-            email_action.send_message(
-                ['5533061@qq.com', 'manstiilin@protonmail.com', '2315983623@qq.com', '348886500@qq.com',
-                 'laosiji@protonmail.com', '2242535441@qq.com'], '31591084@qq.com',f'{to_time_str(target_date)} 核心资产选股结果', msg)
-
+            email_action.send_message(subscriber_emails, f'{to_time_str(target_date)} 核心资产选股结果', msg)
             break
         except Exception as e:
             logger.exception('report_core_company error:{}'.format(e))

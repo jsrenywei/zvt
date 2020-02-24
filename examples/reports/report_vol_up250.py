@@ -5,6 +5,7 @@ import time
 import eastmoneypy
 from apscheduler.schedulers.background import BackgroundScheduler
 
+from examples.reports import subscriber_emails
 from zvdata.api import get_entities
 from zvdata.utils.time_utils import now_pd_timestamp
 from zvt import init_log
@@ -26,7 +27,7 @@ def report_vol_up_250():
 
         try:
             # 抓取k线数据
-            # StockTradeDay.record_data(provider='joinquant')
+            StockTradeDay.record_data(provider='joinquant')
             # Stock1dKdata.record_data(provider='joinquant')
 
             latest_day: StockTradeDay = StockTradeDay.query_data(order=StockTradeDay.timestamp.desc(), limit=1,
@@ -51,6 +52,11 @@ def report_vol_up_250():
                                       return_type='domain')
                 # add them to eastmoney
                 try:
+                    try:
+                        eastmoneypy.del_group('tech')
+                    except:
+                        pass
+                    eastmoneypy.create_group('tech')
                     for stock in stocks:
                         eastmoneypy.add_to_group(stock.code, group_name='tech')
                 except Exception as e:
@@ -64,8 +70,7 @@ def report_vol_up_250():
 
             logger.info(msg)
 
-            email_action.send_message(['5533061@qq.com', '2242535441@qq.com', 'manstiilin@protonmail.com'],
-                                      f'{target_date} 放量突破年线选股结果', msg)
+            email_action.send_message(subscriber_emails, f'{target_date} 放量突破年线选股结果', msg)
 
             break
         except Exception as e:

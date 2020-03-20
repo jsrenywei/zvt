@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import logging
 import time
 
@@ -8,7 +9,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from examples.reports import get_subscriber_emails
 from zvdata.api import get_entities
 from zvt import init_log
-from zvt.domain import Stock, Stock1dKdata
+from zvt.domain import Stock, Stock1dKdata, StockValuation
 from zvt.factors.ma.ma_factor import VolumeUpMa250Factor
 from zvt.factors.target_selector import TargetSelector
 from zvt.informer.informer import EmailInformer
@@ -18,7 +19,7 @@ logger = logging.getLogger(__name__)
 sched = BackgroundScheduler()
 
 
-@sched.scheduled_job('cron', hour=16, minute=0, day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=17, minute=0, day_of_week='mon-fri')
 def report_vol_up_250():
     while True:
         error_count = 0
@@ -42,9 +43,29 @@ def report_vol_up_250():
 
             my_selector.run()
 
-            long_targets = my_selector.get_open_long_targets(timestamp=target_date)
-            if long_targets:
-                stocks = get_entities(provider='joinquant', entity_schema=Stock, entity_ids=long_targets,
+            long_stocks = my_selector.get_open_long_targets(timestamp=target_date)
+
+            msg = 'no targets'
+
+            # 过滤亏损股
+            # check StockValuation data
+            pe_date = target_date - datetime.timedelta(10)
+            if StockValuation.query_data(start_timestamp=pe_date, limit=1, return_type='domain'):
+                positive_df = StockValuation.query_data(provider='joinquant', entity_ids=long_stocks,
+                                                        start_timestamp=pe_date,
+                                                        filters=[StockValuation.pe > 0],
+                                                        columns=['entity_id'])
+                bad_stocks = set(long_stocks) - set(positive_df['entity_id'].tolist())
+                if bad_stocks:
+                    stocks = get_entities(provider='joinquant', entity_schema=Stock, entity_ids=bad_stocks,
+                                          return_type='domain')
+                    info = [f'{stock.name}({stock.code})' for stock in stocks]
+                    msg = '亏损股:' + ' '.join(info) + '\n'
+
+                long_stocks = set(positive_df['entity_id'].tolist())
+
+            if long_stocks:
+                stocks = get_entities(provider='joinquant', entity_schema=Stock, entity_ids=long_stocks,
                                       return_type='domain')
                 # add them to eastmoney
                 try:
@@ -60,9 +81,7 @@ def report_vol_up_250():
                                               'report_vol_up_250 error:{}'.format(e))
 
                 info = [f'{stock.name}({stock.code})' for stock in stocks]
-                msg = ' '.join(info)
-            else:
-                msg = 'no targets'
+                msg = msg + '盈利股:' + ' '.join(info) + '\n'
 
             logger.info(msg)
 

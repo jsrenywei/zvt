@@ -55,7 +55,7 @@ def report_cross_ma():
 
             logger.info(msg)
 
-            email_action.send_message("5533061@qq.com", f'{target_date} 均线选股结果', msg)
+            email_action.send_message("31591084@qq.com", f'{target_date} 均线选股结果', msg)
 
             break
         except Exception as e:
@@ -63,7 +63,7 @@ def report_cross_ma():
             time.sleep(60 * 3)
             error_count = error_count + 1
             if error_count == 10:
-                email_action.send_message("5533061@qq.com", f'report_cross_ma error',
+                email_action.send_message("31591084@qq.com", f'report_cross_ma error',
                                           'report_cross_ma error:{}'.format(e))
 
 

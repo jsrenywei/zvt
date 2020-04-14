@@ -101,21 +101,21 @@ def report_state():
                     for stock in stocks:
                         eastmoneypy.add_to_group(stock.code, group_name='real')
                 except Exception as e:
-                    email_action.send_message("5533061@qq.com", f'report state error',
+                    email_action.send_message("31591084@qq.com", f'report state error',
                                               'report state error:{}'.format(e))
 
                 info = [f'{stock.name}({stock.code})' for stock in stocks]
                 msg = msg + '盈利股:' + ' '.join(info) + '\n'
 
             logger.info(msg)
-            email_action.send_message('5533061@qq.com', f'{target_date} 放量突破年线state选股结果', msg)
+            email_action.send_message('31591084@qq.com', f'{target_date} 放量突破年线state选股结果', msg)
             break
         except Exception as e:
             logger.exception('report state error:{}'.format(e))
             time.sleep(60 * 3)
             error_count = error_count + 1
             if error_count == 10:
-                email_action.send_message("5533061@qq.com", f'report state error',
+                email_action.send_message("31591084@qq.com", f'report state error',
                                           'report state error:{}'.format(e))
 
 

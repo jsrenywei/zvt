@@ -24,13 +24,13 @@ def record_kdata():
             Stock1dKdata.record_data(provider='joinquant', sleeping_time=1)
             StockValuation.record_data(provider='joinquant', sleeping_time=1)
 
-            email_action.send_message("5533061@qq.com", 'joinquant record kdata finished', '')
+            #email_action.send_message("31591084@qq.com", 'joinquant record kdata finished', '')
             break
         except Exception as e:
             msg = f'joinquant runner error:{e}'
             logger.exception(msg)
 
-            email_action.send_message("5533061@qq.com", 'joinquant runner error', msg)
+            email_action.send_message("31591084@qq.com", 'joinquant runner error', msg)
             time.sleep(60)
 
 
@@ -43,13 +43,13 @@ def record_others():
             Etf.record_data(provider='joinquant', sleeping_time=1)
             EtfStock.record_data(provider='joinquant', sleeping_time=1)
 
-            email_action.send_message("5533061@qq.com", 'joinquant runner finished', '')
+            #email_action.send_message("31591084@qq.com", 'joinquant runner finished', '')
             break
         except Exception as e:
             msg = f'joinquant runner error:{e}'
             logger.exception(msg)
 
-            email_action.send_message("5533061@qq.com", 'joinquant runner error', msg)
+            email_action.send_message("31591084@qq.com", 'joinquant runner error', msg)
             time.sleep(60)
 
 

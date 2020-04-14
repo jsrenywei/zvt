@@ -27,14 +27,14 @@ class EmailInformer(Informer):
 
     def send_message(self, to_user, title, body, **kwargs):
         if self.ssl:
-            smtp_client = smtplib.SMTP_SSL()
+            smtp_client = smtplib.SMTP_SSL( zvt_env['smtp_host'] )
         else:
             smtp_client = smtplib.SMTP()
         smtp_client.connect(zvt_env['smtp_host'], zvt_env['smtp_port'])
         smtp_client.login(zvt_env['email_username'], zvt_env['email_password'])
         msg = MIMEMultipart('alternative')
         msg['Subject'] = Header(title).encode()
-        msg['From'] = "{} <{}>".format(Header('zvt').encode(), zvt_env['email_username'])
+        msg['From'] = "{} <{}>".format(Header('TVddz.zvt').encode(), zvt_env['email_username'])
         if type(to_user) is list:
             msg['To'] = ", ".join(to_user)
         else:
@@ -135,7 +135,7 @@ class WechatInformer(Informer):
 
 if __name__ == '__main__':
     email_action = EmailInformer(ssl=True)
-    email_action.send_message(["5533061@qq.com", '2315983623@qq.com'], 'helo', 'just a test')
+    email_action.send_message(["31591084@qq.com", 'jsrenyw@icloud.com'], 'helo', 'just a test')
 
     # weixin_action = WechatInformer()
     # weixin_action.send_price_notification(to_user='oRvNP0XIb9G3g6a-2fAX9RHX5--Q', security_name='BTC/USDT',

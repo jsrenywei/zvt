@@ -59,7 +59,7 @@ def report_block():
         email_action = EmailInformer(ssl=True)
 
         try:
-            latest_day: BlockMoneyFlow = BlockMoneyFlow.query_data(order=BlockMoneyFlow.timestamp.desc(), limit=1,
+            latest_day: BlockMoneyFlow = BlockMoneyFlow.query_data(order=esc(), limit=1,
                                                                    return_type='domain')
             target_date = latest_day[0].timestamp
 
@@ -73,8 +73,8 @@ def report_block():
                 blocks: List[Block] = Block.query_data(provider='sina', entity_ids=industry_long_blocks,
                                                        return_type='domain')
 
-                info = [f'{block.name}({block.code})' for block in blocks]
-                msg = msg + '行业板块:' + ' '.join(info) + '\n'
+                info = [f'{block.name}({block.code})\n' for block in blocks]
+                msg = msg + '行业板块:' + ' '.join(info) + '\n\n'
 
             # 概念板块
             concept_block_selector = ConceptBlockSelector(start_timestamp='2020-01-01', long_threshold=0.85)
@@ -85,8 +85,8 @@ def report_block():
                 blocks: List[Block] = Block.query_data(provider='sina', entity_ids=concept_long_blocks,
                                                        return_type='domain')
 
-                info = [f'{block.name}({block.code})' for block in blocks]
-                msg = msg + '概念板块' + ' '.join(info) + '\n'
+                info = [f'{block.name}({block.code})\n' for block in blocks]
+                msg = msg + '概念板块' + ' '.join(info) + '\n\n'
 
             logger.info(msg)
             email_action.send_message('31591084@qq.com', f'{target_date} 资金流入板块评分结果', msg)
@@ -136,7 +136,7 @@ def report_core_company():
                     email_action.send_message("31591084@qq.com", f'report_core_company error',
                                               'report_core_company error:{}'.format(e))
 
-                info = [f'{stock.name}({stock.code})' for stock in stocks]
+                info = [f'{stock.name}({stock.code})\n' for stock in stocks]
                 msg = ' '.join(info)
             else:
                 msg = 'no targets'
@@ -185,7 +185,7 @@ def report_cross_ma():
             if long_targets:
                 stocks = get_entities(provider='joinquant', entity_schema=Stock, entity_ids=long_targets,
                                       return_type='domain')
-                info = [f'{stock.name}({stock.code})' for stock in stocks]
+                info = [f'{stock.name}({stock.code})\n' for stock in stocks]
                 msg = ' '.join(info)
             else:
                 msg = 'no targets'
@@ -240,8 +240,8 @@ def report_real():
                 if bad_stocks:
                     stocks = get_entities(provider='joinquant', entity_schema=Stock, entity_ids=bad_stocks,
                                           return_type='domain')
-                    info = [f'{stock.name}({stock.code})' for stock in stocks]
-                    msg = '亏损股:' + ' '.join(info) + '\n'
+                    info = [f'{stock.name}({stock.code})\n' for stock in stocks]
+                    msg = '亏损股:' + ' '.join(info) + '\n\n'
 
                 long_stocks = set(positive_df['entity_id'].tolist())
 
@@ -255,8 +255,8 @@ def report_real():
                     blocks: List[Block] = Block.query_data(provider='sina', entity_ids=long_blocks,
                                                            return_type='domain')
 
-                    info = [f'{block.name}({block.code})' for block in blocks]
-                    msg = ' '.join(info) + '\n'
+                    info = [f'{block.name}({block.code})\n' for block in blocks]
+                    msg = ' '.join(info) + '\n\n'
 
                     block_stocks: List[BlockStock] = BlockStock.query_data(provider='sina',
                                                                            filters=[
@@ -282,12 +282,12 @@ def report_real():
                             if not stocks:
                                 stocks = []
                                 block_map_stocks[block_stock.name] = stocks
-                            stocks.append(f'{block_stock.stock_name}({block_stock.stock_code})')
+                            stocks.append(f'{block_stock.stock_name}({block_stock.stock_code})\n')
 
                         for block in block_map_stocks:
                             stocks = block_map_stocks[block]
                             stock_msg = ' '.join(stocks)
-                            msg = msg + f'{block}:\n' + stock_msg + '\n'
+                            msg = msg + f'{block}:\n' + stock_msg + '\n\n'
 
             logger.info(msg)
             email_action.send_message('31591084@qq.com', f'{target_date} 放量突破年线real选股结果', msg)
@@ -337,8 +337,8 @@ def report_state():
                 if bad_stocks:
                     stocks = get_entities(provider='joinquant', entity_schema=Stock, entity_ids=bad_stocks,
                                           return_type='domain')
-                    info = [f'{stock.name}({stock.code})' for stock in stocks]
-                    msg = '亏损股:' + ' '.join(info) + '\n'
+                    info = [f'{stock.name}({stock.code})\n' for stock in stocks]
+                    msg = '亏损股:' + ' '.join(info) + '\n\n'
 
                 long_stocks = set(positive_df['entity_id'].tolist())
 
@@ -354,8 +354,8 @@ def report_state():
                 if bad_stocks:
                     stocks = get_entities(provider='joinquant', entity_schema=Stock, entity_ids=bad_stocks,
                                           return_type='domain')
-                    info = [f'{stock.name}({stock.code})' for stock in stocks]
-                    msg = msg + '3年内高潮过:' + ' '.join(info) + '\n'
+                    info = [f'{stock.name}({stock.code})\n' for stock in stocks]
+                    msg = msg + '3年内高潮过:' + ' '.join(info) + '\n\n'
 
             # 过滤风险股
             if long_stocks:
@@ -367,8 +367,8 @@ def report_state():
 
                     stocks = get_entities(provider='joinquant', entity_schema=Stock, entity_ids=risky_codes,
                                           return_type='domain')
-                    info = [f'{stock.name}({stock.code})' for stock in stocks]
-                    msg = msg + '风险股:' + ' '.join(info) + '\n'
+                    info = [f'{stock.name}({stock.code})\n' for stock in stocks]
+                    msg = msg + '风险股:' + ' '.join(info) + '\n\n'
             if long_stocks:
                 stocks = get_entities(provider='joinquant', entity_schema=Stock, entity_ids=long_stocks,
                                       return_type='domain')
@@ -385,8 +385,8 @@ def report_state():
                     email_action.send_message("31591084@qq.com", f'report state error',
                                               'report state error:{}'.format(e))
 
-                info = [f'{stock.name}({stock.code})' for stock in stocks]
-                msg = msg + '盈利股:' + ' '.join(info) + '\n'
+                info = [f'{stock.name}({stock.code})\n' for stock in stocks]
+                msg = msg + '盈利股:' + ' '.join(info) + '\n\n'
 
             logger.info(msg)
             email_action.send_message('31591084@qq.com', f'{target_date} 放量突破年线state选股结果', msg)
@@ -440,8 +440,8 @@ def report_vol_up_250():
                 if bad_stocks:
                     stocks = get_entities(provider='joinquant', entity_schema=Stock, entity_ids=bad_stocks,
                                           return_type='domain')
-                    info = [f'{stock.name}({stock.code})' for stock in stocks]
-                    msg = '亏损股:' + ' '.join(info) + '\n'
+                    info = [f'{stock.name}({stock.code})\n' for stock in stocks]
+                    msg = '亏损股:' + ' '.join(info) + '\n\n'
 
                 long_stocks = set(positive_df['entity_id'].tolist())
 
@@ -461,8 +461,8 @@ def report_vol_up_250():
                     email_action.send_message("31591084@qq.com", f'report_vol_up_250 error',
                                               'report_vol_up_250 error:{}'.format(e))
 
-                info = [f'{stock.name}({stock.code})' for stock in stocks]
-                msg = msg + '盈利股:' + ' '.join(info) + '\n'
+                info = [f'{stock.name}({stock.code})\n' for stock in stocks]
+                msg = msg + '盈利股:' + ' '.join(info) + '\n\n'
 
             logger.info(msg)
 
@@ -480,6 +480,8 @@ def report_vol_up_250():
 
 if __name__ == '__main__':
     init_log('report.log')
+
+    report_block()
 
     sched.start()
 

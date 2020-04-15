@@ -59,7 +59,7 @@ def report_block():
         email_action = EmailInformer(ssl=True)
 
         try:
-            latest_day: BlockMoneyFlow = BlockMoneyFlow.query_data(order=esc(), limit=1,
+            latest_day: BlockMoneyFlow = BlockMoneyFlow.query_data(order=BlockMoneyFlow.timestamp.desc(), limit=1,
                                                                    return_type='domain')
             target_date = latest_day[0].timestamp
 

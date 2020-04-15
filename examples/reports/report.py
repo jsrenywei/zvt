@@ -6,13 +6,18 @@ from typing import List
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import eastmoneypy
+from examples.factors.block_selector import BlockSelector
 from examples.factors.fundamental_selector import FundamentalSelector
+from examples.reports import risky_company
 from zvdata import IntervalLevel
 from zvdata.api import get_entities
+from zvdata.api import get_entity_code
 from zvdata.utils.time_utils import now_pd_timestamp, to_time_str
 from zvt import init_log
-from zvt.domain import Block, BlockMoneyFlow, BlockCategory
-from zvt.domain import Stock
+from zvt.domain import *
+from zvt.factors.ma.ma_factor import CrossMaFactor
+from zvt.factors.ma.ma_factor import VolumeUpMa250Factor
+from zvt.factors.ma.ma_stats import MaStateStatsFactor
 from zvt.factors.money_flow_factor import BlockMoneyFlowFactor
 from zvt.factors.target_selector import TargetSelector
 from zvt.informer.informer import EmailInformer
@@ -20,7 +25,6 @@ from zvt.informer.informer import EmailInformer
 logger = logging.getLogger(__name__)
 
 sched = BackgroundScheduler()
-
 
 class IndustryBlockSelector(TargetSelector):
 
@@ -101,7 +105,7 @@ def report_block():
 
 
 # 基本面选股 每周一次即可 基本无变化
-@sched.scheduled_job('cron', hour=16, minute=0, day_of_week='6')
+@sched.scheduled_job('cron', hour=16, minute=0, day_of_week=6)
 def report_core_company():
     while True:
         error_count = 0
@@ -481,7 +485,7 @@ def report_vol_up_250():
 if __name__ == '__main__':
     init_log('report.log')
 
-    report_block()
+    # 定时启动即可，无需启动时候附带运行一次
 
     sched.start()
 

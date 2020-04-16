@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import time
+import datetime
 from typing import List
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -25,6 +26,7 @@ from zvt.informer.informer import EmailInformer
 logger = logging.getLogger(__name__)
 
 sched = BackgroundScheduler()
+
 
 class IndustryBlockSelector(TargetSelector):
 
@@ -158,7 +160,7 @@ def report_core_company():
                                           'report_core_company error:{}'.format(e))
 
 
-@sched.scheduled_job('cron', hour=18, minute=0, day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=19, minute=50, day_of_week='mon-fri')
 def report_cross_ma():
     while True:
         error_count = 0
@@ -208,7 +210,7 @@ def report_cross_ma():
                                           'report_cross_ma error:{}'.format(e))
 
 
-@sched.scheduled_job('cron', hour=17, minute=30, day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=18, minute=30, day_of_week='mon-fri')
 def report_real():
     while True:
         error_count = 0
@@ -305,7 +307,7 @@ def report_real():
                                           'report_real error:{}'.format(e))
 
 
-@sched.scheduled_job('cron', hour=17, minute=30, day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=18, minute=40, day_of_week='mon-fri')
 def report_state():
     while True:
         error_count = 0
@@ -404,7 +406,7 @@ def report_state():
                                           'report state error:{}'.format(e))
 
 
-@sched.scheduled_job('cron', hour=17, minute=0, day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=18, minute=10, day_of_week='mon-fri')
 def report_vol_up_250():
     while True:
         error_count = 0

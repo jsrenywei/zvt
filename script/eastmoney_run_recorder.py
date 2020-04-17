@@ -106,6 +106,6 @@ if __name__ == '__main__':
     #holder_run()
     #finance_run()
     #dividend_run()
-    #sched.start()
+    sched.start()
 
     sched._thread.join()

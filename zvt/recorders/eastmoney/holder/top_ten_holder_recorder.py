@@ -48,7 +48,7 @@ class TopTenHolderRecorder(EastmoneyTimestampsDataRecorder):
         return the_id
 
 
-__all__ = ['TopTenHolder']
+__all__ = ['TopTenHolderRecorder']
 
 if __name__ == '__main__':
     # init_log('top_ten_holder.log')

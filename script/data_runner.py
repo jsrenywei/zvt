@@ -24,21 +24,20 @@ def record_kdata():
             Stock1dKdata.record_data(provider='joinquant', sleeping_time=1)
             StockValuation.record_data(provider='joinquant', sleeping_time=1)
 
-            email_action.send_message("31591084@qq.com", 'joinquant record kdata finished', '')
+            email_action.send_message("31591084@qq.com", 'data.runner joinquant.record_kdata finished', '')
             break
         except Exception as e:
             msg = f'joinquant runner error:{e}'
             logger.exception(msg)
 
-            email_action.send_message("31591084@qq.com", 'joinquant runner error', msg)
+            email_action.send_message("31591084@qq.com", 'data.runner joinquant.record_kdata  error', msg)
             time.sleep(60 * 2)
 
 
 @sched.scheduled_job('cron', hour=18, minute=30)
 def record_others():
     while True:
-        # email_action = EmailInformer()
-
+        email_action = EmailInformer()
         try:
             Etf.record_data(provider='joinquant', sleeping_time=1)
             EtfStock.record_data(provider='joinquant', sleeping_time=1)
@@ -49,15 +48,14 @@ def record_others():
             msg = f'joinquant runner error:{e}'
             logger.exception(msg)
 
-            # email_action.send_message("31591084@qq.com", 'joinquant runner error', msg)
+            email_action.send_message("31591084@qq.com", 'data.runner joinquant.record_others error', msg)
             time.sleep(60 * 2)
 
 
 @sched.scheduled_job('cron', hour=15, minute=30, day_of_week='mon,wed,fri')
 def record_block():
+    email_action = EmailInformer()
     while True:
-        # email_action = EmailInformer()
-
         try:
             Block.record_data(provider='sina', sleeping_time=2)
             BlockStock.record_data(provider='sina', sleeping_time=2)
@@ -68,7 +66,7 @@ def record_block():
             msg = f'sina block error:{e}'
             logger.exception(msg)
 
-            # email_action.send_message("31591084@qq.com", 'sina block error', msg)
+            email_action.send_message("31591084@qq.com", 'data.runner sina.record_block error', msg)
             time.sleep(60 * 2)
 
 
@@ -77,8 +75,7 @@ def record_block():
 @sched.scheduled_job('cron', hour=2, minute=00, day_of_week='mon-fri')
 def record_finance():
     while True:
-        # email_action = EmailInformer()
-
+        email_action = EmailInformer()
         try:
             Stock.record_data(provider='eastmoney')
             FinanceFactor.record_data(provider='eastmoney')
@@ -92,7 +89,7 @@ def record_finance():
             msg = f'eastmoney runner1 error:{e}'
             logger.exception(msg)
 
-            # email_action.send_message("31591084@qq.com", 'eastmoney runner1 error', msg)
+            email_action.send_message("31591084@qq.com", 'data.runner eastmoney.record_finance error', msg)
             time.sleep(60)
 
 

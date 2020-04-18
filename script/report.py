@@ -489,6 +489,13 @@ if __name__ == '__main__':
 
     # 定时启动即可，无需启动时候附带运行一次
 
+    report_block()
+    report_core_company()
+    report_cross_ma()
+    report_real()
+    report_state()
+    report_vol_up_250()
+
     sched.start()
 
     sched._thread.join()

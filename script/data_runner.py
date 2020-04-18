@@ -35,7 +35,7 @@ def record_kdata():
             time.sleep(60 * 2)
 
 
-@sched.scheduled_job('cron', hour=18, minute=30,day_of_week='mon-sat')
+@sched.scheduled_job('cron', hour=18, minute=30,day_of_week='tue,thu')
 def record_others():
     while True:
         email_action = EmailInformer()

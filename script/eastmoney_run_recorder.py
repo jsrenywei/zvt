@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 sched = BackgroundScheduler()
 
 
-@sched.scheduled_job('cron', hour=2, minute=00,day_of_week=7)
+@sched.scheduled_job('cron', hour=2, minute=00,day_of_week=6)
 def dividend_run():
     while True:
         try:
@@ -44,10 +44,12 @@ def dividend_run():
             time.sleep(60)
 
 
-@sched.scheduled_job('cron', hour=2, minute=00,day_of_week=0)
+#block temperate
+#@sched.scheduled_job('cron', hour=2, minute=00,day_of_week=0)
 def finance_run():
     while True:
         try:
+            # jointquant.source
             ChinaStockFinanceFactorRecorder().run()
             ChinaStockCashFlowRecorder().run()
             ChinaStockBalanceSheetRecorder().run()
@@ -58,7 +60,7 @@ def finance_run():
             time.sleep(60*3)
 
 
-@sched.scheduled_job('cron', hour=1, minute=00,day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=23, minute=30,day_of_week='mon-fri')
 def holder_run():
     while True:
         try:

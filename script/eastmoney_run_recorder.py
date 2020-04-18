@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 sched = BackgroundScheduler()
 
 
-@sched.scheduled_job('cron', hour=2, minute=00)
+@sched.scheduled_job('cron', hour=2, minute=00,day_of_week=7)
 def dividend_run():
     while True:
         try:
@@ -44,7 +44,7 @@ def dividend_run():
             time.sleep(60)
 
 
-@sched.scheduled_job('cron', hour=2, minute=00)
+@sched.scheduled_job('cron', hour=2, minute=00,day_of_week=0)
 def finance_run():
     while True:
         try:
@@ -55,10 +55,10 @@ def finance_run():
             break
         except Exception as e:
             logger.exception('eastmoney finance runner 0 error:{}'.format(e))
-            time.sleep(60*2)
+            time.sleep(60*3)
 
 
-@sched.scheduled_job('cron', hour=1, minute=00)
+@sched.scheduled_job('cron', hour=1, minute=00,day_of_week='mon-fri')
 def holder_run():
     while True:
         try:
@@ -70,7 +70,7 @@ def holder_run():
             time.sleep(60*2)
 
 
-@sched.scheduled_job('cron', hour=1, minute=00)
+@sched.scheduled_job('cron', hour=1, minute=00,day_of_week=6)
 def meta_run():
     while True:
         try:
@@ -82,7 +82,7 @@ def meta_run():
             time.sleep(60*2)
 
 
-@sched.scheduled_job('cron', hour=16, minute=00)
+@sched.scheduled_job('cron', hour=16, minute=00,day_of_week='mon-fri')
 def quote_run():
     while True:
         try:
@@ -95,7 +95,7 @@ def quote_run():
             break
         except Exception as e:
             logger.exception('easymoney quote runner error:{}'.format(e))
-            time.sleep(60)
+            time.sleep(60*3)
 
 
 if __name__ == '__main__':

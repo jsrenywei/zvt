@@ -13,15 +13,16 @@ logger = logging.getLogger(__name__)
 sched = BackgroundScheduler()
 
 
-@sched.scheduled_job('cron', hour=15, minute=30)
+@sched.scheduled_job('cron', hour=15, minute=30,day_of_week='mon-sat')
 def record_kdata():
     while True:
         email_action = EmailInformer()
 
         try:
             Stock.record_data(provider='joinquant', sleeping_time=1)
-            StockTradeDay.record_data(provider='joinquant', sleeping_time=1)
             Stock1dKdata.record_data(provider='joinquant', sleeping_time=1)
+
+            StockTradeDay.record_data(provider='joinquant', sleeping_time=1)
             StockValuation.record_data(provider='joinquant', sleeping_time=1)
 
             email_action.send_message("31591084@qq.com", 'data.runner joinquant.record_kdata finished', '')
@@ -34,7 +35,7 @@ def record_kdata():
             time.sleep(60 * 2)
 
 
-@sched.scheduled_job('cron', hour=18, minute=30)
+@sched.scheduled_job('cron', hour=18, minute=30,day_of_week='mon-sat')
 def record_others():
     while True:
         email_action = EmailInformer()

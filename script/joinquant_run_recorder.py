@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 sched = BackgroundScheduler()
 
 
-@sched.scheduled_job('cron', hour=16, minute=0)
+@sched.scheduled_job('cron', hour=16, minute=0,day_of_week='mon-fri')
 def record_day_kdata():
     while True:
         try:
@@ -26,7 +26,7 @@ def record_day_kdata():
 
 
 # 每周6抓取周线和月线数据
-@sched.scheduled_job('cron', day_of_week=5, hour=3, minute=0)
+@sched.scheduled_job('cron', day_of_week=6, hour=3, minute=0)
 def record_wk_kdata():
     while True:
         try:
@@ -42,9 +42,9 @@ def record_wk_kdata():
 if __name__ == '__main__':
     init_log('joinquant_run_recorder.log')
 
-    record_day_kdata()
+    #record_day_kdata()
 
-    record_wk_kdata()
+    #record_wk_kdata()
 
     sched.start()
 

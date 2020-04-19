@@ -21,15 +21,11 @@ from zvt.recorders.eastmoney.meta.china_stock_meta_recorder import EastmoneyChin
 from zvt.recorders.eastmoney.quotes.china_stock_kdata_recorder import ChinaStockKdataRecorder
 from zvt.recorders.eastmoney.finance.china_stock_balance_sheet_recorder import ChinaStockBalanceSheetRecorder
 
-
-
-
 logger = logging.getLogger(__name__)
-
 sched = BackgroundScheduler()
 
 
-@sched.scheduled_job('cron', hour=2, minute=00,day_of_week=6)
+@sched.scheduled_job('cron', hour=2, minute=00, day_of_week=6)
 def dividend_run():
     while True:
         try:
@@ -44,10 +40,11 @@ def dividend_run():
             time.sleep(60)
 
 
-#block temperate
-#@sched.scheduled_job('cron', hour=2, minute=00,day_of_week=0)
+# block temperate
+@sched.scheduled_job('cron', hour=1, minute=00, day_of_week=0)
 def finance_run():
-    while True:
+    loop = 8
+    while loop >= 0:
         try:
             # jointquant.source
             ChinaStockFinanceFactorRecorder().run()
@@ -56,11 +53,12 @@ def finance_run():
             ChinaStockIncomeStatementRecorder().run()
             break
         except Exception as e:
+            loop -= 1
             logger.exception('eastmoney finance runner 0 error:{}'.format(e))
             time.sleep(60*3)
 
 
-@sched.scheduled_job('cron', hour=23, minute=30,day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=23, minute=30, day_of_week='tue,thu')
 def holder_run():
     while True:
         try:
@@ -72,7 +70,7 @@ def holder_run():
             time.sleep(60*2)
 
 
-@sched.scheduled_job('cron', hour=1, minute=00,day_of_week=6)
+@sched.scheduled_job('cron', hour=1, minute=00, day_of_week=6)
 def meta_run():
     while True:
         try:
@@ -84,7 +82,7 @@ def meta_run():
             time.sleep(60*2)
 
 
-@sched.scheduled_job('cron', hour=16, minute=00,day_of_week='mon-fri')
+# @sched.scheduled_job('cron', hour=16, minute=00, day_of_week='mon-fri')
 def quote_run():
     while True:
         try:

@@ -40,49 +40,50 @@ sched = BackgroundScheduler()
 
 @sched.scheduled_job('cron', hour=16, minute=0, day_of_week='mon-fri')
 def record_day_kdata():
-    while True:
+    loop = 9
+    while loop >= 0:
         try:
             JqChinaStockKdataRecorder(level=IntervalLevel.LEVEL_1DAY).run()
-
             break
         except Exception as e:
+            loop -= 1
             logger.exception('joinquant_run_recorder joinquant day_kdata runner error:{}'.format(e))
-            time.sleep(60*2)
+            time.sleep(60 * 2)
 
 
 # 每周6抓取周线和月线数据
 @sched.scheduled_job('cron', day_of_week=5, hour=22, minute=30)
 def record_wk_kdata():
-    while True:
+    loop = 8
+    while loop >= 0:
         try:
             JqChinaStockKdataRecorder(level=IntervalLevel.LEVEL_1WEEK).run()
-            JqChinaStockKdataRecorder(level=IntervalLevel.LEVEL_1MON).run()
-
             break
         except Exception as e:
+            loop -= 1
             logger.exception('joinquant_run_recorder joinquant wk_kdata runner error:{}'.format(e))
-            time.sleep(60*2)
+            time.sleep(60 * 2)
 
 
 # 每周6抓取周线和月线数据
 @sched.scheduled_job('cron', day_of_week=6, hour=22, minute=30)
 def record_month_kdata():
-    while True:
+    loop = 8
+    while loop >= 0:
         try:
             JqChinaStockKdataRecorder(level=IntervalLevel.LEVEL_1MON).run()
-
             break
         except Exception as e:
+            loop -= 1
             logger.exception('joinquant_run_recorder joinquant month_kdata runner error:{}'.format(e))
-            time.sleep(60*2)
+            time.sleep(60 * 2)
 
 
 if __name__ == '__main__':
     init_log('joinquant_run_recorder.log')
 
-    record_day_kdata()
-    record_wk_kdata()
+    # record_day_kdata()
+    # record_wk_kdata()
 
     sched.start()
-
     sched._thread.join()

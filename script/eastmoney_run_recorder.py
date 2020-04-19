@@ -27,7 +27,8 @@ sched = BackgroundScheduler()
 
 @sched.scheduled_job('cron', hour=2, minute=00, day_of_week=6)
 def dividend_run():
-    while True:
+    loop = 8
+    while loop >= 0:
         try:
             DividendFinancingRecorder().run()
             RightsIssueDetailRecorder().run()
@@ -36,8 +37,9 @@ def dividend_run():
 
             break
         except Exception as e:
+            loop -= 1
             logger.exception('eastmoney dividend_run runner error:{}'.format(e))
-            time.sleep(60)
+            time.sleep(60*(10-loop))
 
 
 # block temperate
@@ -55,36 +57,41 @@ def finance_run():
         except Exception as e:
             loop -= 1
             logger.exception('eastmoney finance runner 0 error:{}'.format(e))
-            time.sleep(60*3)
+            time.sleep(60*(10-loop))
 
 
 @sched.scheduled_job('cron', hour=23, minute=30, day_of_week='tue,thu')
 def holder_run():
-    while True:
+    loop = 8
+    while loop >= 0:
         try:
             TopTenHolderRecorder().run()
             TopTenTradableHolderRecorder().run()
             break
         except Exception as e:
+            loop -= 1
             logger.exception('eastmoney holder runner error:{}'.format(e))
-            time.sleep(60*2)
+            time.sleep(60*(10-loop))
 
 
 @sched.scheduled_job('cron', hour=1, minute=00, day_of_week=6)
 def meta_run():
+    loop = 8
     while True:
         try:
             EastmoneyChinaBlockStockRecorder().run()
             EastmoneyChinaStockDetailRecorder().run()
             break
         except Exception as e:
+            loop -= 1
             logger.exception('easymoney meta runner error:{}'.format(e))
-            time.sleep(60*2)
+            time.sleep(60*(10-loop))
 
 
 # @sched.scheduled_job('cron', hour=16, minute=00, day_of_week='mon-fri')
 def quote_run():
-    while True:
+    loop = 8
+    while loop >= 0:
         try:
             week_kdata = ChinaStockKdataRecorder(level=IntervalLevel.LEVEL_1WEEK)
             week_kdata.run()
@@ -94,8 +101,10 @@ def quote_run():
 
             break
         except Exception as e:
+            loop -= 1
             logger.exception('easymoney quote runner error:{}'.format(e))
-            time.sleep(60*3)
+            time.sleep(60*(10-loop))
+
 
 
 if __name__ == '__main__':
@@ -107,5 +116,4 @@ if __name__ == '__main__':
     #finance_run()
     #dividend_run()
     sched.start()
-
     sched._thread.join()

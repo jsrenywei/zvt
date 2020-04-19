@@ -13,24 +13,24 @@ logger = logging.getLogger(__name__)
 sched = BackgroundScheduler()
 
 
-@sched.scheduled_job('cron', hour=17, minute=00)
+@sched.scheduled_job('cron', hour=17, minute=00, day_of_week='mon-fri')
 def run():
-    while True:
+    loop = 8
+    while loop >= 0:
         try:
             SinaChinaBlockRecorder().run()
 
             SinaBlockMoneyFlowRecorder().run()
             break
         except Exception as e:
+            loop -= 1
             logger.exception('sina runner error:{}'.format(e))
-            time.sleep(60)
+            time.sleep(60*(10-loop))
 
 
 if __name__ == '__main__':
     init_log('sina_run_recorder.log')
-
-    run()
+    #run()
 
     sched.start()
-
     sched._thread.join()

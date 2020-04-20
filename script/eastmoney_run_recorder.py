@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 sched = BackgroundScheduler()
 
 
-@sched.scheduled_job('cron', hour=2, minute=00, day_of_week=6)
+@sched.scheduled_job('cron', hour=2, minute=00, day_of_week=5)
 def dividend_run():
     loop = 8
     while loop >= 0:
@@ -43,7 +43,7 @@ def dividend_run():
 
 
 # block temperate
-@sched.scheduled_job('cron', hour=1, minute=00, day_of_week=0)
+@sched.scheduled_job('cron', hour=1, minute=00, day_of_week=6)
 def finance_run():
     loop = 8
     while loop >= 0:
@@ -74,7 +74,7 @@ def holder_run():
             time.sleep(60*(10-loop))
 
 
-@sched.scheduled_job('cron', hour=1, minute=00, day_of_week=6)
+@sched.scheduled_job('cron', hour=1, minute=00, day_of_week=5)
 def meta_run():
     loop = 8
     while True:

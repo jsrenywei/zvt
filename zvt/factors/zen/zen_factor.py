@@ -96,10 +96,27 @@ class ZenFactor(TechnicalFactor):
         transformer: Transformer = None
         acc = ZenAccumulator()
 
-        super().__init__(entity_ids, entity_type, exchanges, codes, the_timestamp, start_timestamp,
-                         end_timestamp, columns, filters, order, limit, provider, level, category_field, time_field,
-                         computing_window, keep_all_timestamp, fill_method, effective_number, transformer, acc,
-                         persist_factor, dry_run)
+        super().__init__(entity_ids=entity_ids,
+                         exchanges=exchanges,
+                         codes=codes,
+                         the_timestamp=the_timestamp,
+                         start_timestamp=start_timestamp,
+                         end_timestamp=end_timestamp,
+                         columns=columns, filters=filters,
+                         order=order,
+                         limit=limit,
+                         provider=provider,
+                         level=level,
+                         category_field=category_field,
+                         time_field=time_field,
+                         computing_window=computing_window,
+                         keep_all_timestamp=keep_all_timestamp,
+                         fill_method=fill_method,
+                         effective_number=effective_number,
+                         transformer=transformer,
+                         accumulator=acc,
+                         persist_factor=persist_factor,
+                         dry_run=dry_run)
 
 
 if __name__ == '__main__':

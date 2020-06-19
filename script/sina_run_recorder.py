@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 sched = BackgroundScheduler()
 
 
-@sched.scheduled_job('cron', hour=17, minute=00, day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=2, minute=00, day_of_week='tue-sat')
 def run():
     loop = 8
     while loop >= 0:

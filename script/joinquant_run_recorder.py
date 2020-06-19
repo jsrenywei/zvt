@@ -38,7 +38,7 @@ sched = BackgroundScheduler()
 # 龙虎榜数据	DragonAndTiger	eastmoney
 
 
-@sched.scheduled_job('cron', hour=16, minute=0, day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=1, minute=10, day_of_week='tue-sat')
 def record_day_kdata():
     loop = 9
     while loop >= 0:
@@ -52,7 +52,7 @@ def record_day_kdata():
 
 
 # 每周6抓取周线和月线数据
-@sched.scheduled_job('cron', day_of_week=5, hour=22, minute=30)
+@sched.scheduled_job('cron', day_of_week=6, hour=2, minute=30)
 def record_wk_kdata():
     loop = 8
     while loop >= 0:
@@ -66,7 +66,7 @@ def record_wk_kdata():
 
 
 # 每周6抓取周线和月线数据
-@sched.scheduled_job('cron', day_of_week=6, hour=22, minute=30)
+@sched.scheduled_job('cron', day_of_week=0, hour=2, minute=30)
 def record_month_kdata():
     loop = 8
     while loop >= 0:
@@ -87,3 +87,4 @@ if __name__ == '__main__':
 
     sched.start()
     sched._thread.join()
+

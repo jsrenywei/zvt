@@ -58,7 +58,7 @@ class ConceptBlockSelector(TargetSelector):
         self.score_factors.append(block_factor)
 
 
-@sched.scheduled_job('cron', hour=15, minute=50, day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=8, minute=50, day_of_week='mon-sat')
 def report_block():
     while True:
         error_count = 0
@@ -107,7 +107,7 @@ def report_block():
 
 
 # 基本面选股 每周一次即可 基本无变化
-@sched.scheduled_job('cron', hour=16, minute=0, day_of_week=6)
+@sched.scheduled_job('cron', hour=8, minute=0, day_of_week=6)
 def report_core_company():
     while True:
         error_count = 0
@@ -160,7 +160,7 @@ def report_core_company():
                                           'report_core_company error:{}'.format(e))
 
 
-@sched.scheduled_job('cron', hour=19, minute=50, day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=8, minute=50, day_of_week='mon-sat')
 def report_cross_ma():
     while True:
         error_count = 0
@@ -210,7 +210,7 @@ def report_cross_ma():
                                           'report_cross_ma error:{}'.format(e))
 
 
-@sched.scheduled_job('cron', hour=18, minute=30, day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=8, minute=30, day_of_week='tue-sat')
 def report_real():
     while True:
         error_count = 0
@@ -307,7 +307,7 @@ def report_real():
                                           'report_real error:{}'.format(e))
 
 
-@sched.scheduled_job('cron', hour=18, minute=40, day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=8, minute=40, day_of_week='tue-sat')
 def report_state():
     while True:
         error_count = 0
@@ -406,7 +406,7 @@ def report_state():
                                           'report state error:{}'.format(e))
 
 
-@sched.scheduled_job('cron', hour=18, minute=10, day_of_week='mon-fri')
+@sched.scheduled_job('cron', hour=8, minute=10, day_of_week='mon-sat')
 def report_vol_up_250():
     while True:
         error_count = 0

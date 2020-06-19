@@ -43,7 +43,7 @@ def dividend_run():
 
 
 # block temperate
-@sched.scheduled_job('cron', hour=1, minute=00, day_of_week='sun')
+@sched.scheduled_job('cron', hour=1, minute=20, day_of_week='sun')
 def finance_run():
     loop = 8
     while loop >= 0:
@@ -60,7 +60,7 @@ def finance_run():
             time.sleep(60*(10-loop))
 
 
-@sched.scheduled_job('cron', hour=23, minute=30, day_of_week='tue,thu')
+@sched.scheduled_job('cron', hour=2, minute=30, day_of_week='tue,thu')
 def holder_run():
     loop = 8
     while loop >= 0:
@@ -74,7 +74,7 @@ def holder_run():
             time.sleep(60*(10-loop))
 
 
-@sched.scheduled_job('cron', hour=1, minute=00, day_of_week='sat')
+@sched.scheduled_job('cron', hour=1, minute=10, day_of_week='sat')
 def meta_run():
     loop = 8
     while True:
